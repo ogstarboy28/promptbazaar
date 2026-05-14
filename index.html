@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptBazaar – Ready‑made AI Prompts</title>
+  <meta name="description" content="Search, copy & export ready‑made AI prompts for ChatGPT, Claude, Gemini, Midjourney and more." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center pt-8">
+
+  <header class="max-w-3xl w-full text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">PromptBazaar</h1>
+    <p class="text-gray-600 mt-2">Search, copy & export ready‑made AI prompts for any model.</p>
+  </header>
+
+  <!-- Search box -->
+  <div class="max-w-2xl w-full px-4 mb-4">
+    <input id="searchBox"
+           type="text"
+           placeholder="🔍 Search prompts – e.g. LinkedIn carousel, Midjourney cyberpunk…"
+           class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+  </div>
+
+  <!-- Prompt list -->
+  <div id="promptList" class="max-w-2xl w-full space-y-4 px-4"></div>
+
+  <!-- Mailchimp email capture (Pro Pack) -->
+  <footer class="max-w-2xl w-full text-center mt-12 px-4">
+    <div id="mc_embed_shell">
+      <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css">
+      <style type="text/css">
+        #mc_embed_signup {background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width:600px;}
+      </style>
+      <div id="mc_embed_signup">
+        <form action="https://gmail.us6.list-manage.com/subscribe/post?u=7b7b6be33e8cfbcc150f2e200&amp;id=3ec075f57d&amp;f_id=00b3e5e1f0"
+              method="post"
+              id="mc-embedded-subscribe-form"
+              name="mc-embedded-subscribe-form"
+              class="validate"
+              target="_blank">
+          <div id="mc_embed_signup_scroll">
+            <h2>Subscribe</h2>
+            <div class="indicates-required"><span class="asterisk">*</span> indicates required</div>
+            <div class="mc-field-group">
+              <label for="mce-EMAIL">Email Address <span class="asterisk">*</span></label>
+              <input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required value="">
+            </div>
+            <div id="mce-responses" class="clear foot">
+              <div class="response" id="mce-error-response" style="display:none;"></div>
+              <div class="response" id="mce-success-response" style="display:none;"></div>
+            </div>
+            <div aria-hidden="true" style="position:absolute; left:-5000px;">
+              <input type="text" name="b_7b7b6be33e8cfbcc150f2e200_3ec075f57d" tabindex="-1" value="">
+            </div>
+            <div class="optionalParent">
+              <div class="clear foot">
+                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe">
+                <p style="margin:0 auto;">
+                  <a href="http://eepurl.com/ctVxTpS_V8" title="Mailchimp - email marketing made easy and fun">
+                    <span style="display:inline-block; background-color:transparent; border-radius:4px;">
+                      <img class="refferal_badge"
+                           src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg"
+                           alt="Intuit Mailchimp"
+                           style="width:220px; height:40px; display:flex; padding:2px 0; justify-content:center; align-items:center;">
+                    </span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+    <script>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';}(jQuery));</script>
+  </footer>
+
+  <script type="module" src="config.js"></script>
+  <script type="module">
+    import { CSV_URL } from './config.js';
+    const sb = document.getElementById('searchBox');
+    const pl = document.getElementById('promptList');
+    let allPrompts = [];
+    async function load() {
+      const r = await fetch(CSV_URL);
+      const txt = await r.text();
+      const rows = txt.split('\n').filter(l=>l.trim());
+      const header = rows.shift().split(',').map(h=>h.replace(/^"|"$/g, '').trim());
+      allPrompts = rows.map(row=>{
+        const cols = row.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+        const o={}; header.forEach((h,i)=>o[h]=cols[i]?cols[i].replace(/^"|"$/g, '').trim():'' );
+        return o;
+      });
+      render(allPrompts);
+    }
+    function render(list){
+      pl.innerHTML='';
+      list.forEach(p=>{
+        const c=document.createElement('div');
+        c.className='bg-white p-4 rounded shadow hover:shadow-md';
+        c.innerHTML=`
+          <h3 class="font-semibold text-lg text-indigo-700 mb-1">${p.Prompt}</h3>
+          <p class="text-sm text-gray-600 mb-2"><strong>Use‑case:</strong> ${p.UseCase}</p>
+          <p class="text-xs text-gray-500 mb-2"><strong>Model:</strong> ${p.Model} • <strong>Tokens:</strong> ${p.Tokens}</p>
+          <div class="flex space-x-2">
+            <button class="bg-indigo-600 text-white px-2 py-1 rounded" onclick="navigator.clipboard.writeText('${p.Prompt}')">Copy Prompt</button>
+            <button class="bg-gray-600 text-white px-2 py-1 rounded" onclick="navigator.clipboard.writeText('${p.PromptTemplate}')">Copy Template</button>
+          </div>`;
+        pl.appendChild(c);
+      });
+    }
+    sb.addEventListener('input',()=>{
+      const q=sb.value.toLowerCase();
+      const filtered=allPrompts.filter(p=>
+        (p.Prompt && p.Prompt.toLowerCase().includes(q)) ||
+        (p.UseCase && p.UseCase.toLowerCase().includes(q)) ||
+        (p.Tags && p.Tags.toLowerCase().includes(q))
+      );
+      render(filtered);
+    });
+    load();
+  </script>
+</body>
+</html>
