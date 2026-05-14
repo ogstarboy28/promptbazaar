@@ -1,0 +1,14 @@
+{
+  "static": {
+    "directory": "promptbazaar/public"
+  },
+  "headers": [
+    {
+      "source": "/prompts.csv",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000" },
+        { "key": "Content-Type", "value": "text/csv; charset=UTF-8" }
+      ]
+    }
+  ]
+}
