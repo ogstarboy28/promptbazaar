@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptBazaar – Ready‑made AI Prompts</title>
+  <meta name="description" content="Search, copy & export ready‑made AI prompts for ChatGPT, Claude, Gemini, Midjourney and more." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center pt-8">
+
+  <header class="max-w-3xl w-full text-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">PromptBazaar</h1>
+    <p class="text-gray-600 mt-2">Search, copy & export ready‑made AI prompts for any model.</p>
+  </header>
+
+  <!-- Search box -->
+  <div class="max-w-2xl w-full px-4 mb-4">
+    <input id="searchBox"
+           type="text"
+           placeholder="🔍 Search prompts – e.g. LinkedIn carousel, Midjourney cyberpunk…"
+           class="w-full p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+  </div>
+
+  <!-- Prompt list -->
+  <div id="promptList" class="max-w-2xl w-full space-y-4 px-4"></div>
+
+  <!-- Mailchimp email capture (Pro Pack) -->
+  <footer class="max-w-2xl w-full text-center mt-12 px-4">
+    <!-- Mailchimp embedded form will be injected here -->
+    <div id="mailchimpContainer"></div>
+  </footer>
+
+  <script type="module" src="config.js"></script>
+  <script type="module">
+    import { CSV_URL } from './config.js';
+    const searchBox = document.getElementById('searchBox');
+    const promptList = document.getElementById('promptList');
+    const mailchimpContainer = document.getElementById('mailchimpContainer');
+    async function loadPrompts() {
+      const resp = await fetch(CSV_URL);
+      const text = await resp.text();
+      const rows = text.split('\n').filter(r => r.trim() !== '');
+      const header = rows.shift().split(',').map(h => h.replace(/^"|"$/g, '').trim());
+      return rows.map(r => {
+        const cols = r.split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/);
+        const obj = {};
+        header.forEach((h,i) => obj[h] = cols[i] ? cols[i].replace(/^"|"$/g, '').trim() : '' );
+        return obj;
+      });
+    }
+    function render(prompts) {
+      promptList.innerHTML = '';
+      prompts.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'bg-white p-4 rounded shadow hover:shadow-md';
+        card.innerHTML = `
+          <h3 class="font-semibold text-lg text-indigo-700 mb-
