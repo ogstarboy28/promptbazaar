@@ -1,6 +1,6 @@
 {
   "static": {
-    "directory": "promptbazaar/public"
+    "directory": "public"
   },
   "headers": [
     {
