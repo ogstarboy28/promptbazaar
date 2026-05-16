@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-16T06:11:03.215Z",
+  "entries": {
+    "memory:memory/2026-05-13.md:1:2": {
+      "key": "memory:memory/2026-05-13.md:1:2",
+      "path": "memory/2026-05-13.md",
+      "startLine": 1,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "[cron:65ada0eb-e5a7-4a4f-828f-6f2696b9981b Auto-save conversation every 5 minutes] bash ~/scripts/save_latest.sh Current time: Wednesday, May 13th, 2026 - 11:10 AM (UTC) / 2026-05-13 11:10 UTC",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.6371442321409665,
+      "maxScore": 0.6371442321409665,
+      "firstRecalledAt": "2026-05-16T06:11:03.215Z",
+      "lastRecalledAt": "2026-05-16T06:11:03.215Z",
+      "queryHashes": [
+        "fddb15d11eed"
+      ],
+      "recallDays": [
+        "2026-05-16"
+      ],
+      "conceptTags": [
+        "auto-save",
+        "scripts/save-latest.sh",
+        "cron",
+        "65ada0eb",
+        "e5a7",
+        "4a4f",
+        "828f",
+        "6f2696b9981b"
+      ]
+    }
+  }
+}
