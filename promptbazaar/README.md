@@ -37,3 +37,4 @@ promptbazaar/
 ```
 
 Once deployed you’ll have a live PromptBazaar ready for traffic. Feel free to customise colours, add analytics (Google Analytics script) and tweak the UI.
+# redeploy‑trigger
